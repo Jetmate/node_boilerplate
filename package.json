@@ -28,7 +28,7 @@
     "socket.io": "^2.0.2"
   },
   "bugs": {
-    "url": "https://github.com/Jetmate/CTAMap/issues"
+    "url": "https://github.com/Jetmate/node_boilerplate/issues"
   },
-  "homepage": "https://github.com/Jetmate/CTAMap#readme"
+  "homepage": "https://github.com/Jetmate/node_boilerplate#readme"
 }
