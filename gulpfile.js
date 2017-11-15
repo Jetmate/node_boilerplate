@@ -2,59 +2,26 @@
 
 const gulp = require('gulp')
 const nodemon = require('gulp-nodemon')
+const babel = require('gulp-babel')
 
-const pug = require('gulp-pug')
+const SRC = 'src/**/*.js'
+const DEST = 'www'
+const FINAL = 'index.js'
 
-const coffee = require('gulp-coffee')
-const uglify = require('gulp-uglify')
-
-const sass = require('gulp-sass')
-const cleanCSS = require('gulp-clean-css')
-
-const source = 'src/**/*'
-const clientOutput = 'public'
-const html = '.pug'
-const styles = '.sass'
-const scripts = '.coffee'
-const server = 'app.coffee'
-const serverOutput = ''
-const serverFinal = 'app.js'
-
-gulp.task('html', function () {
-  return gulp.src(source + html)
-    .pipe(pug())
-    .pipe(gulp.dest(clientOutput))
+gulp.task('babel', function () {
+  return gulp.src(SRC)
+    .pipe(babel({
+      presets: ['env', 'stage-0']
+    }))
+    .pipe(gulp.dest(DEST))
 })
 
-gulp.task('styles', function () {
-  return gulp.src(source + styles)
-    .pipe(sass())
-    .pipe(cleanCSS())
-    .pipe(gulp.dest(clientOutput))
-})
-
-gulp.task('scripts', function () {
-  return gulp.src(source + scripts)
-    .pipe(coffee())
-    .pipe(uglify())
-    .pipe(gulp.dest(clientOutput))
-})
-
-gulp.task('server_script', function () {
-  return gulp.src(server)
-    .pipe(coffee())
-    .pipe(gulp.dest(serverOutput))
-})
-
-gulp.task('nodemon', ['server_script'], function (cb) {
-  nodemon({script: serverFinal})
+gulp.task('nodemon', ['babel'], function () {
+  nodemon({ script: DEST + '/' + FINAL })
 })
 
 gulp.task('watch', function () {
-  gulp.watch(source + html, ['html'])
-  gulp.watch(source + styles, ['styles'])
-  gulp.watch(source + scripts, ['scripts'])
-  gulp.watch(server, ['server_script'])
+  gulp.watch(SRC, ['babel'])
 })
 
-gulp.task('default', ['watch', 'html', 'scripts', 'styles', 'nodemon'])
+gulp.task('default', ['nodemon', 'watch'])
